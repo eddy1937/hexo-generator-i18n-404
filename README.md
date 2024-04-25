@@ -1,0 +1,1 @@
+# hexo-generator-i18n-404
