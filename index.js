@@ -16,13 +16,14 @@ const defaultInfo = {
 }
 
 const generatorNotFoundPost = (path, lang) => {
+    const info = i18n_404[lang] ?? defaultInfo;
     return {
         path: path,
         data: {
-            title: i18n_404[lang]?.title ?? defaultInfo.title,
+            title: info.title,
             lang: lang,
             permalink: path,
-            description: i18n_404[lang]?.description ?? defaultInfo.description,
+            description: info.description,
             copyright: false,
             // content: ''
         },
