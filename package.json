@@ -1,0 +1,25 @@
+{
+  "name": "hexo-generator-i18n-404",
+  "version": "1.0.0",
+  "description": "i18n 404 post generator for Hexo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddy1937/hexo-generator-i18n-404.git"
+  },
+  "keywords": [
+    "hexo",
+    "generator",
+    "i18n",
+    "404"
+  ],
+  "author": "Eddy Lin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eddy1937/hexo-generator-i18n-404/issues"
+  },
+  "homepage": "https://github.com/eddy1937/hexo-generator-i18n-404#readme"
+}
