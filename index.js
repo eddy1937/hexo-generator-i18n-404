@@ -1,3 +1,6 @@
+const hexo_fs = require("hexo-fs");
+const hexo_front_matter = require("hexo-front-matter");
+
 const postPermalink = (post) => hexo.execFilterSync('post_permalink', post, {context: hexo});
 
 const postPermalinkBylang = (post, lang) => {
@@ -12,20 +15,35 @@ const i18n_404 = hexo.config.i18n_404;
 
 const defaultInfo = {
     title: i18n_404?.default?.title ?? 'Sorry! Post Not Found',
-    description: i18n_404?.default?.description
+    description: i18n_404?.default?.description,
+    contentPath: i18n_404?.default?.contentPath,
+}
+
+const generatorData = (path) => {
+    const md = hexo_fs.readFileSync(path);
+    const data = hexo_front_matter.parse(md);
+    const content = hexo.render.renderSync({ text: data._content, engine: 'md'});
+    return {
+        title: data.title,
+        description: data.description,
+        content: content,
+    }
 }
 
 const generatorNotFoundPost = (path, lang) => {
-    const info = i18n_404[lang] ?? defaultInfo;
+    const info = i18n_404[lang];
+    const contentPath = info?.contentPath ?? defaultInfo?.contentPath;
+    const data = contentPath ? generatorData(contentPath) : undefined;
+
     return {
         path: path,
         data: {
-            title: info.title,
+            title: info?.title ?? data?.title ?? defaultInfo.title,
             lang: lang,
             permalink: path,
-            description: info.description,
+            description: info?.description ?? data?.description ?? defaultInfo.description,
             copyright: false,
-            // content: ''
+            content: data?.content
         },
         layout: ['post'],
     };
