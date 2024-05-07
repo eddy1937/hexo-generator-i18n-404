@@ -49,20 +49,48 @@ const generatorNotFoundPost = (path, lang) => {
     };
 }
 
+const generatorUseOnPost = (post, path, lang) => {
+    return {
+        path: path,
+        data: {
+            ...post,
+            path: path,
+            lang: lang,
+            permalink: path
+        },
+        layout: ['post'],
+    };
+}
+
 hexo.extend.generator.register('i18n-404', function(locals){
     const config = this.config;
     if(!config.language) {
         return [];
     }
     const languages = new Set(config.language.filter(lang => lang !== 'default'));
+    const postPermalinks = new Set();
     return Array.from(locals.posts.reduce((map, post) => {
-        if (languages.has(post.lang) && !map.delete(postPermalink(post))) {
+        const link = postPermalink(post);
+        postPermalinks.add(link);
+        if (languages.has(post.lang) && !map.delete(link)) {
             languages.forEach((lang) => {
                 if (lang === post.lang) {
                     return;
                 };
                 const _path = postPermalinkBylang(post, lang);
-                map.set(_path, generatorNotFoundPost(_path, lang));
+                if(!map.has(_path)) {
+                    map.set(_path, generatorNotFoundPost(_path, lang));
+                }
+            });
+        }
+        const usePageOn = post?.i18n_404?.usePageOn;
+        const useOnLangs = usePageOn === 'all' ? [...languages] : usePageOn;
+        if (Array.isArray(useOnLangs)) {
+            useOnLangs.forEach((lang) => {
+                const _path = postPermalinkBylang(post, lang);
+                if (!postPermalinks.has(_path)) {
+                    map.set(_path, generatorUseOnPost(post, _path, lang));
+                }
             });
         }
         return map;
