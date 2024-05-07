@@ -56,7 +56,7 @@ const generatorUseOnPost = (post, path, lang) => {
             ...post,
             path: path,
             lang: lang,
-            permalink: path
+            // permalink: path
         },
         layout: ['post'],
     };
