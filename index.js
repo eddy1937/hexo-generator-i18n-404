@@ -69,9 +69,12 @@ hexo.extend.generator.register('i18n-404', function(locals){
     }
     const languages = new Set(config.language.filter(lang => lang !== 'default'));
     const postPermalinks = new Set();
-    return Array.from(locals.posts.reduce((map, post) => {
+    return Array.from(locals.all_posts.reduce((map, post) => {
         const link = postPermalink(post);
         postPermalinks.add(link);
+        if (!!post?.hidden && !post?.i18n_404?.enableOnHidden) {
+            return map;
+        }
         if (languages.has(post.lang) && !map.delete(link)) {
             languages.forEach((lang) => {
                 if (lang === post.lang) {
